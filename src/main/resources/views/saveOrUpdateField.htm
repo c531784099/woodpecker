@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>查看索引调度列表</title>
+    #parse("common.htm")
+</head>
+<body>
+<h1>#if($ObjectUtils.isNull($field.id)) Add Field #else Update Field [$field.name] of index [$index.name]#end </h1>
+
+<form method="post" action="$contextPath/indexer/saveOrUpdateField.htm">
+    #submittoken
+    #if($messages.error.size() > 0)
+    <h4 style="color:red">
+        <ul>
+            #foreach($msg in $messages.error.values())
+            <li>$msg</li>
+            #end
+        </ul>
+    </h4>
+    #end
+    <table class="thinTable">
+        <tr>
+            <td align="right">Name:</td>
+            <td><input name="name" type="text" value="$!field.name"/></td>
+        </tr>
+        <tr>
+            <td align="right">Column Names:</td>
+            <td><input name="columnNames" type="text" value="$!field.columnNames" size="100"/></td>
+        </tr>
+        <tr>
+            <td align="right">Type:</td>
+            <td>
+                <select name="type">
+                    <option
+                    #if($!field.type.name == "java.lang.String") selected #end
+                    value="java.lang.String">java.lang.String</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Long") selected #end
+                    value="java.lang.Long">java.lang.Long</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Integer") selected #end
+                    value="java.lang.Integer">java.lang.Integer</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Date") selected #end
+                    value="java.lang.Date">java.lang.Date</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Byte") selected #end
+                    value="java.lang.Byte">java.lang.Byte</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Boolean") selected #end
+                    value="java.lang.Boolean">java.lang.Boolean</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Float") selected #end
+                    value="java.lang.Float">java.lang.Float</option>
+                    <option
+                    #if($!field.type.name == "java.lang.Double") selected #end
+                    value="java.lang.Double">java.lang.Double</option>
+                    <option
+                    #if($!field.type.name == "java.sql.Timestamp") selected #end
+                    value="java.sql.Timestamp">java.sql.Timestamp</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Unique:</td>
+            <td><input name="unique" type="checkbox" #if($field.unique) checked #end /></td>
+        </tr>
+        <tr>
+            <td align="right">Convertor Class:</td>
+            <td>
+                <select name="convertorClass">
+                    <option></option>
+                    <option
+                    #if($field.convertorClass.name == "cn.bidlink.framework.search.engine.ZoneConvertor") selected #end
+                    value="cn.bidlink.framework.search.engine.ZoneConvertor">cn.bidlink.framework.search.engine.ZoneConvertor</option>
+                    <option
+                    #if($field.convertorClass.name == "cn.bidlink.framework.search.engine.DateConvertor") selected #end
+                    value="cn.bidlink.framework.search.engine.DateConvertor">cn.bidlink.framework.search.engine.DateConvertor</option>
+                    <option
+                    #if($field.convertorClass.name == "cn.bidlink.framework.search.engine.LongTimeConvertor") selected
+                    #end
+                    value="cn.bidlink.framework.search.engine.LongTimeConvertor">cn.bidlink.framework.search.engine.LongTimeConvertor</option>
+                    <option
+                    #if($field.convertorClass.name == "cn.bidlink.framework.search.engine.TextConvert") selected #end
+                    value="cn.bidlink.framework.search.engine.TextConvert">cn.bidlink.framework.search.engine.TextConvert</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                #if($ObjectUtils.notNull($field.id))
+                <input name="id" type="hidden" value="$field.id"/>
+                #end
+                <input name="indexId" type="hidden"
+                       value="#if($ObjectUtils.notNull($field.indexId)) $field.indexId #else $param.indexId #end"/>
+                <input type="submit" value="#if($ObjectUtils.isNull($field.id)) Add #else Update #end"/>
+            </td>
+        </tr>
+    </table>
+
+</form>
+</body>
+</html>

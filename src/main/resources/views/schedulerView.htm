@@ -1,0 +1,142 @@
+<html>
+<head>
+    <title>查看索引调度列表</title>
+</head>
+<body>
+#parse("common.htm")
+<script type="text/javascript">
+	var crateTaskCount = 0;
+	var pageNo = 1;
+	var url = '$contextPath/indexer/findScheduler.htm?name=$param.name';
+	if(!isNaN('$param.pageNo')){
+		pageNo = '$param.pageNo';
+		url = '$contextPath/indexer/findScheduler.htm?name=$param.name&pageNo=$param.pageNo';
+	}
+	var pageCount = 1;
+    jQuery(document).ready(function () {
+    	crateTaskCount = getCreateTaskCount('$param.name');
+    	if(crateTaskCount % 20 == 0){
+    		pageCount = parseInt(crateTaskCount / 20);
+    	}else{
+    		pageCount = parseInt(crateTaskCount / 20 + 1);
+    	}
+    	$('#pageCount').html(pageCount);
+    	getPageNo();
+    	
+        var schedulerGrid = jQuery('#schedulerViewTable').treegrid({
+            url: url,
+            treeField: 'name',
+            columns: [
+                [
+                    {field: "name", title: "Name", width: 200},
+                    {field: "startTime", title: "Start Time", width: 200},
+                    {field: "terminated", title: "Terminated", width: 80},
+                    {field: "terminatedTime", title: "Terminated Time", width: 80,
+                        formatter: function (value, row, index) {
+                            if (value) {
+                                return (parseInt(value) / 1000) + "&nbsp;s";
+                            }
+                            return value;
+                        }
+                    },
+                    {field: "completed", title: "Completed", width: 80},
+                    {field: "completedTime", title: "Completed Time", width: 80,
+                        formatter: function (value, row, index) {
+                            if (value) {
+                                return (parseInt(value) / 1000) + "&nbsp;s";
+                            }
+                            return value;
+                        }
+                    },
+                    {field: "completedCount", title: "Completed Count", width: 80},
+                    {field: "exception", title: "Exception", width: 80,
+                        formatter: function (value, row, index) {
+                            if (value && value.length > 0) {
+                                var id = 'exceptionMsg' + row.id;
+                                var errorMsg = '<a id="' + id + '" href="javascript:void(0)" onclick="showExectiponDetail(this)">';
+                                errorMsg += '<div id="' + id + '_div" style="display:none">' + value + '</div>';
+                                errorMsg += '<img src="$contextPath/images/error.png" sytle="border:0px;"/>';
+                                errorMsg += '</a>';
+                                return errorMsg;
+                            }
+                        }
+                    }
+                ]
+            ],
+            rownumbers: true,
+            idField: "id",
+            fitColumns: true
+        });
+    });
+
+    function showExectiponDetail(obj) {
+        var id = jQuery(obj).attr("id");
+        eval("showDetail(\"Exception Detail\",\"" + id + "_div\")");
+    }
+    
+    function getCreateTaskCount(name){
+    	var pageCountTemp = 0;
+    	jQuery.ajax({
+            async: false,
+            type: "GET",
+            url: "$contextPath/indexer/getCreateTaskCount.htm?indexName="+name,
+            success: function (data) {
+            	if(data != -1){
+            		pageCountTemp = data;
+        		}
+            }
+        });
+    	return pageCountTemp;
+    }
+    
+    function getTaskByPage(pageNo){
+    	window.location.href = "$contextPath/schedulerView.htm?name=searchbu&pageNo="+pageNo;
+    }
+    
+    function getPageNo(){
+    	if(pageNo > pageCount){
+    		pageNo = pageCount;
+    	}
+    	if(pageNo < 1){
+    		pageNo = 1;
+    	}
+    	$('#pageNo').html(pageNo);
+    	return parseInt(pageNo);
+    }
+
+    function stopScheduler(name) {
+        jQuery.ajax({
+            async: false,
+            type: "GET",
+            url: "$contextPath/indexer/shutdowScheduler.htm?name=" + name,
+            success: function () {
+                window.location.href = "$contextPath/indexer/findIndexList.htm";
+            }
+        });
+    }
+</script>
+
+<div id="div1"></div>
+<h4>Schduler Status</h4>
+
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-tip" onclick="stopScheduler('$param.name')">
+    Shutdown
+</a>
+<a class="easyui-linkbutton" iconCls="icon-tip" href="$contextPath/indexer/findIndexList.htm">
+    Index List
+</a>
+
+<br/>
+<br/>
+<table id="schedulerViewTable"></table>
+
+<div>
+&nbsp;<a style="cursor: hand;cursor: pointer;" onclick="getTaskByPage(1);">首页</a>
+&nbsp;<a style="cursor: hand;cursor: pointer;" onclick="getTaskByPage(getPageNo()-1);">上一页</a>
+&nbsp;<a id="pageNo" style="cursor: hand;cursor: pointer;" onclick="getTaskByPage(getPageNo());"></a>
+&nbsp;<a style="cursor: hand;cursor: pointer;" onclick="getTaskByPage(getPageNo()+1);">下一页</a>
+&nbsp;<a style="cursor: hand;cursor: pointer;" onclick="getTaskByPage(pageCount);">末页</a>
+&nbsp;每页20条,共<span id="pageCount"></span>页
+</div>
+</body>
+</html>

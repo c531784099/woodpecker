@@ -1,0 +1,398 @@
+<html>
+<head>
+    <title>查看索引调度列表</title>
+
+    <link rel="stylesheet" type="text/css" href="$contextPath/css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="$contextPath/css/themes/icon.css">
+    <script type="text/javascript" src="$contextPath/js/jquery.js"></script>
+    <script type="text/javascript" src="$contextPath/js/jquery.easyui.js"></script>
+    
+    <script type="text/javascript">
+        function startScheduler(id) {
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/startScheduler.htm?id=" + id),
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        }
+        function stopScheduler(name) {
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/shutdowScheduler.htm?name=" + name),
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        }
+        function shutdownServer() {
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/shutdownServer.json?1=1"),
+                success: function (msg) {
+                    alert(msg.messages.errors.activeScheduler);
+                    window.location.reload();
+                }
+            });
+        }
+        function recreateIndex(indexId, indexName) {
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/recreateIndex.json?id=" + indexId + "&name=" + indexName),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function createIndex(indexId, indexName) {
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/createIndex.json?id=" + indexId + "&name=" + indexName),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function divideCreateTask(indexId, indexName){
+        	jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/divideCreateTask.json?id=" + indexId + "&name=" + indexName),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function createIndexWithoutDivide(indexId, indexName){
+        	jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/createIndexWithoutDivide.json?id=" + indexId + "&name=" + indexName),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function copyIndex(indexId, indexName) {
+        	var newIndexName = prompt('请输入复制后的IndexName,该名称即为solr中的collection名称');
+        	if(!newIndexName){
+        		return;
+        	}
+        	var flag = true;
+        	jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: "$contextPath/indexer/existsIndexName.htm?newIndexName="+newIndexName,
+                success: function (result) {
+                	if(result == 0){
+                		flag = false;
+            			alert('indexName:'+newIndexName+'已经存在,请换个其它名称');
+            		}
+                },
+                error: function(result){
+                	flag = false;
+                	alert('查询indexName:'+newIndexName+'异常，请检查一下问题，系统先不进行copy工作');
+                }
+            });
+        	if(flag){
+        		jQuery.ajax({
+                    async: false,
+                    type: "GET",
+                    url: "$contextPath/indexer/copyNewIndex.json?indexId=" + indexId + "&newIndexName=" + newIndexName,
+                    success: function (result) {
+                    	var finalMsg = "Failed Copy";
+                        if (result.messages.errors.recreateFailed) {
+                            finalMsg = result.messages.errors.recreateFailed;
+                        } else if (result.messages.infos.success) {
+                            finalMsg = result.messages.infos.success;
+                        }
+                        alert(finalMsg);
+                        window.location.reload();
+                    }
+                });
+        	}
+        }
+
+        function shallowCopyIndex(indexId, indexName) {
+            var newIndexName = prompt('请输入复制后的IndexName,该名称即为solr中的collection名称');
+            if(!newIndexName){
+                return;
+            }
+            var flag = true;
+            jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: "$contextPath/indexer/existsIndexName.htm?newIndexName="+newIndexName,
+                success: function (result) {
+                    if(result == 0){
+                        flag = false;
+                        alert('indexName:'+newIndexName+'已经存在,请换个其它名称');
+                    }
+                },
+                error: function(result){
+                    flag = false;
+                    alert('查询indexName:'+newIndexName+'异常，请检查一下问题，系统先不进行copy工作');
+                }
+            });
+            if(flag){
+                jQuery.ajax({
+                    async: false,
+                    type: "GET",
+                    url: "$contextPath/indexer/shallowCopyNewIndex.json?indexId=" + indexId + "&newIndexName=" + newIndexName,
+                    success: function (result) {
+                        var finalMsg = "Failed Copy";
+                        if (result.messages.errors.recreateFailed) {
+                            finalMsg = result.messages.errors.recreateFailed;
+                        } else if (result.messages.infos.success) {
+                            finalMsg = result.messages.infos.success;
+                        }
+                        alert(finalMsg);
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+        function refreshMaintainCount(indexId){
+        	jQuery.get('$contextPath/indexer/getMaintainCount.htm?indexId='+indexId+"&timestamp="+new Date().getTime(), function(data){
+        		if(data == -1){
+        			alert('刷新出错');
+        			return;
+        		}
+        		$('#maintainCount'+indexId).html(data);
+        	});
+        }
+        function deleteMaintainTaskQueue(indexId, indexName, type){
+        	var createtime = prompt('请输入时间，格式yyyy-MM-dd HH:mm:ss，输入-1表示将所有之前执行过的队列从新设置');
+        	if(!createtime){
+        		return;
+        	}
+        	var url;
+        	if(createtime == -1){
+            	url = "$contextPath/indexer/deleteMaintainTaskQueue.json?id=" + indexId + "&name=" + indexName + "&type="+type;
+        	}else{
+        		var checkType = "^([1-2][0-9][0-9][0-9])-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-4]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]):(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])$";
+            	var re = new RegExp(checkType);
+            	if(createtime.match(re) == null){
+            		alert('不符合 yyyy-MM-dd HH:mm:ss 格式');
+            		return;
+            	}
+            	url = "$contextPath/indexer/deleteMaintainTaskQueue.json?id=" + indexId + "&name=" + indexName +"&createtime=" + createtime + "&type="+type;
+        	}
+        	jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate(url),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function resetCreateTasks(indexId, indexName){
+        	jQuery.ajax({
+                async: false,
+                type: "GET",
+                url: appendDate("$contextPath/indexer/resetCreateTasks.json?id="  + indexId + "&name=" + indexName),
+                success: function (result) {
+                    var finalMsg = "Failed";
+                    if (result.messages.errors.recreateFailed) {
+                        finalMsg = result.messages.errors.recreateFailed;
+                    } else if (result.messages.infos.success) {
+                        finalMsg = result.messages.infos.success;
+                    }
+                    alert(finalMsg);
+                    window.location.reload();
+                }
+            });
+        }
+        function appendDate(url) {
+            return url + "&currentDate=" + new Date();
+        }
+    </script>
+    <style>
+        #imageLink a:link {
+            text-decoration: none;
+        }
+
+        #imageLink a:visited {
+            text-decoration: none;
+        }
+
+        #imageLink a:visited:hover {
+            text-decoration: none;
+        }
+
+        #imageLink a:hover {
+            text-decoration: none;
+        }
+
+        #imageLink a:active {
+            text-decoration: none;
+        }
+
+        #imageLink a img {
+            border: 0px;
+        }
+    </style>
+</head>
+
+<body>
+<h2>Index List 222:</h2>
+
+<a class="easyui-linkbutton" iconCls="icon-tip" href="$contextPath/saveOrUpdateIndex.htm">
+    Add
+</a>
+<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-tip"
+   onclick="if(confirm('Really?')) shutdownServer()">
+    Shutdown Server
+</a>
+
+<br/>
+<br/>
+<table class="easyui-datagrid" singleSelect="true" rownumbers="true" fitColumns="true">
+    <thead>
+    <tr style="font-size:20">
+        <th width="300" field="name">Name</th>
+        <th width="200" field="status">Status</th>
+        <th width="200" field="last">Last</th>
+        <th width="200" field="operation">Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($indexPack in $indexPacks)
+    <tr>
+        <td>
+            <a href="$contextPath/indexer/findIndex.htm?id=$indexPack.index.id">
+                $indexPack.index.name
+            </a>
+        </td>
+        <td valign="bottom">
+            #if($ObjectUtils.isNull($indexPack.scheduler) or $indexPack.scheduler.terminated)
+            <img src="$contextPath/images/red.png"/>
+            #end
+            #if($ObjectUtils.notNull($indexPack.scheduler) and $indexPack.scheduler.terminated == false)
+            <img src="$contextPath/images/running.gif"/>
+            <a href="$contextPath/schedulerView.htm?name=$indexPack.index.name">
+                $date.format('yyyy-MM-dd HH:mm:ss.SSS',$indexPack.scheduler.startTime)
+            </a>
+            #end
+        </td>
+        <td>
+            #if($ObjectUtils.notNull($indexPack.scheduler) and $indexPack.scheduler.terminated)
+            <!--a href="$contextPath/indexer/findScheduler.htm?name=$indexPack.index.name"-->
+            <a href="$contextPath/schedulerView.htm?name=$indexPack.index.name">
+                $date.format('yyyy-MM-dd HH:mm:ss.SSS',$indexPack.scheduler.startTime)
+            </a>
+            #end
+        </td>
+        <td>
+			<span id="imageLink">
+			#if(($ObjectUtils.isNull($indexPack.scheduler) or $indexPack.scheduler.terminated))
+				##if($indexPack.index.recreated)
+        		<a href="javascript:void(0)" onclick="if(confirm('Really?')) startScheduler('$indexPack.index.id')">
+                    <img src="$contextPath/images/start.png" alt="Start"/>
+                </a>
+				&nbsp;
+				##end
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('Really?')) recreateIndex('$indexPack.index.id', '$indexPack.index.name')">
+                    <img src="$contextPath/images/recreate.png" alt="Recreate" width="16" height="16"/>
+                </a>
+				&nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('Really?')) createIndex('$indexPack.index.id', '$indexPack.index.name')">
+                    <img src="$contextPath/images/create.png" alt="Create" width="16" height="16"/>
+                </a>
+               &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('Really?')) copyIndex('$indexPack.index.id', '$indexPack.index.name')">
+                    <img src="$contextPath/images/copy.png" alt="Copy" width="16" height="16"/>
+                </a>
+                 &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('Really?')) shallowCopyIndex('$indexPack.index.id', '$indexPack.index.name')">
+                    <img src="$contextPath/images/scopy.png" alt="Shallow Copy" width="16" height="16"/>
+                </a>
+                &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('确认开始分配任务?')) divideCreateTask('$indexPack.index.id','$indexPack.index.name')">
+                    <img src="$contextPath/images/divide.png" alt="Divide" width="16" height="16"/>
+                </a>
+                &nbsp;
+                <a href="javascript:void(0)"
+                   onclick="if(confirm('确认将所有任务设置为未完成?')) resetCreateTasks('$indexPack.index.id','$indexPack.index.name')">
+                    <img src="$contextPath/images/reset.png" alt="Reset" width="16" height="16"/>
+                </a>
+                &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('确认开始执行任务?')) createIndexWithoutDivide('$indexPack.index.id','$indexPack.index.name')">
+                    <img src="$contextPath/images/execute.png" alt="Execute" width="16" height="16"/>
+                </a>
+                &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('确认修改维护任务队列更新时间为空，>=createtime?')) deleteMaintainTaskQueue('$indexPack.index.id','$indexPack.index.name',1)">
+                    <img src="$contextPath/images/clear.png" alt="Clear" width="16" height="16"/>
+                </a>
+                &nbsp;
+        		<a href="javascript:void(0)"
+                   onclick="if(confirm('确认删除维护任务队列更新时间不为空的数据，<=createtime?')) deleteMaintainTaskQueue('$indexPack.index.id','$indexPack.index.name',2)">
+                    <img src="$contextPath/images/delete.png" alt="Clear" width="16" height="16"/>
+                </a>
+			#end
+			#if($ObjectUtils.notNull($indexPack.scheduler) and $indexPack.scheduler.terminated == false)
+				&nbsp;&nbsp;
+        		<a href="javascript:void(0)" onclick="if(confirm('Really?')) stopScheduler('$indexPack.index.name')">
+                    <img src="$contextPath/images/stop.png" alt="stop"/>
+                </a>
+			#end
+				&nbsp;&nbsp;
+				<span id="maintainCount$indexPack.index.id"></span>
+        		<a href="javascript:void(0)" onclick="refreshMaintainCount('$indexPack.index.id');">刷新</a>
+            </span>
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+</body>
+</html>

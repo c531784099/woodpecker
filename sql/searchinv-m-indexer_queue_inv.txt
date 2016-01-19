@@ -1,0 +1,29 @@
+select
+    --id
+    iy.project_id id,
+    --fullText
+    iy.title,
+    iy.buyer_name buyerName,
+    DBMS_LOB.SUBSTR(iy.product,0,4000) product,
+    --type
+    --iy.type,
+    --projectType
+    min(iy.project_type) projectType,
+    --title see fullText.title
+    --buyerName see fullText.buyerName
+    --buyerId
+    iy.buyer_company_id buyerId,
+    --pubDate
+    iy.pub_time pubDate,
+    --beginDate
+    pu.begindate beginDate,
+    --endDate
+    iy.end_time endDate,
+    --openState
+    pu.openstate openState,
+    --supplerId
+    REPLACE(wmsys.wm_concat(iy.suppler_id), ',', ' ') supplerId
+  from integ_ycy iy left join sync_purchase_project pu on iy.project_id=pu.originprojectid
+  where pu.openstate=1
+  group by iy.project_id,iy.title,iy.buyer_name,DBMS_LOB.SUBSTR(iy.product,0,4000),
+iy.buyer_company_id,iy.pub_time,pu.begindate,iy.end_time,pu.openstate

@@ -1,0 +1,59 @@
+select
+#id
+sp.id id,
+#poClass
+0 poClass,
+#title
+sp.title title,
+#fullText
+#manuFacturer
+sp.manuFacturer manuFacturer,
+#companyName
+sp.companyName companyName,
+#companyId
+sp.companyId companyId,
+#industry
+sp.industry industry,
+#zone
+sp.zone zone,
+#zoneName
+#sp.zoneName zoneName,
+#zoneStr
+sp.zoneStr zoneStr,
+#pubDate
+sp.pubDate pubDate,
+#processTime,
+sp.processTime processTime,
+#productGroup
+sp.product_Group_id productGroup,
+#hasPrice
+CASE WHEN sp.price IS NULL THEN 0 WHEN sp.price='' THEN 0 ELSE 1 END hasPrice,
+#price
+CASE WHEN sp.price IS NULL THEN '面议' WHEN sp.price='' THEN '面议' ELSE sp.price END price,
+#unit
+sp.unit unit,
+#publisher
+sp.publisher publisher,
+#publisherid
+sp.publisherid publisherid,
+#noisestate
+sp.noticestate noisestate,
+#state
+sp.state state,
+#docAbstract
+sp.usages docAbstract,
+#picFile
+sp.picFile picFile,
+#spacestate
+(select si.state from SPACE_INFO si where sp.companyid=si.company_id limit 0,1)spacestate
+#companystate
+#matestate
+#authStatus
+#authenNumber
+#eNumber
+#ePrice
+#bNumber
+#bPrice
+#tradeNumber
+#tradePrice
+from SPACE_PRODUCT sp

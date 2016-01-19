@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Index View [$index.name] </title>
+
+</head>
+<body>
+#parse("common.htm")
+<div id="tt" class="easyui-tabs" style="width:500px;height:250px;">
+</div>
+<script>
+    var tab = jQuery('#tt').tabs({
+        border: false,
+        onSelect: function (title) {
+            alert(title + ' is selected');
+        }
+    });
+    tab.add({
+        title: 'New Tab',
+        content: 'Tab Body',
+        closable: true,
+        width: 500,
+        height: 400
+    });
+</script>
+
+</body>
+</html>

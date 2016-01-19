@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>Task Detail</title>
+    #parse("common.htm")
+</head>
+<body>
+<h1>
+    Task
+    #if($ObjectUtils.notNull($task.id))
+    [$task.name]
+    #end
+
+    of index
+    #if($StringUtils.hasLength($param.indexName))
+    [$param.indexName]
+    #else
+    [$index.name]
+    #end
+</h1>
+
+<table class="thinTable">
+    <tr>
+        <td align="right">Name:</td>
+        <td>$!task.name</td>
+    </tr>
+    <tr>
+        <td align="right">Start Time:</td>
+        <td>$!task.startTime</td>
+    </tr>
+    <tr>
+        <td align="right">Completed:</td>
+        <td><img style="border:0"
+                 src="#if($!task.completed) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/></td>
+    </tr>
+    <tr>
+        <td align="right">Completed Time:</td>
+        <td>$!task.completedTime</td>
+    </tr>
+    <tr>
+        <td align="right">Completed Count:</td>
+        <td>$!task.completedCount</td>
+    </tr>
+    <tr>
+        <td align="right">Content Sql:</td>
+        <td>
+            <textarea rows="20" cols="100" readonly>$!task.contentSql</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td align="right">Exception:</td>
+        <td><textarea rows="5" cols="100" readonly>$!task.exception</textarea></td>
+    </tr>
+
+    ###create
+    #if($param.type == "create")
+    <tr>
+        <td align="right">Original:</td>
+        <td><img style="border:0"
+                 src="#if($!task.original) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/></td>
+    </tr>
+    <tr>
+        <td align="right">Dividable:</td>
+        <td><img style="border:0"
+                 src="#if($!task.dividable) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/></td>
+    </tr>
+    <tr>
+        <td align="right">Divide Size:</td>
+        <td>$!task.divideSize</td>
+    </tr>
+    <tr>
+        <td align="right">Table Name:</td>
+        <td>$!task.tableName</td>
+    </tr>
+    #end
+    ###maintain
+    #if($param.type == "maintain")
+    <tr>
+        <td align="right">Queue Table Name:</td>
+        <td>$!task.queueTableName</td>
+    </tr>
+    <tr>
+        <td align="right">Repeat Interval:</td>
+        <td>$!task.repeatInterval</td>
+    </tr>
+    #end
+</table>
+</form>
+</body>
+</html>

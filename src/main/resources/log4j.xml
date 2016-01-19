@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="consoleInfoLog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="INFO"/>
+            <param name="LevelMin" value="INFO"/>
+        </filter>
+    </appender>
+    <appender name="consoleWarnLog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="WARN"/>
+            <param name="LevelMin" value="WARN"/>
+        </filter>
+    </appender>
+
+    <appender name="consoleDebugLog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="DEBUG"/>
+            <param name="LevelMin" value="DEBUG"/>
+        </filter>
+    </appender>
+
+    <appender name="consoleErrorLog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="ERROR"/>
+            <param name="LevelMin" value="ERROR"/>
+        </filter>
+    </appender>
+
+    <appender name="traceLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd'.log'"/>
+        <param name="File" value="/Users/wangqingwu/Programs/woodpecker/logs/ebnew_space_trace"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+    </appender>
+
+    <appender name="debugLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd'.log'"/>
+        <param name="File" value="/Users/wangqingwu/Programs/woodpecker/logs/ebnew_space_debug"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="DEBUG"/>
+            <param name="LevelMin" value="DEBUG"/>
+        </filter>
+    </appender>
+
+    <appender name="infoLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd'.log'"/>
+        <param name="File" value="/Users/wangqingwu/Programs/woodpecker/logs/ebnew_space_info"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="INFO"/>
+            <param name="LevelMin" value="INFO"/>
+        </filter>
+    </appender>
+
+    <appender name="warnLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd'.log'"/>
+        <param name="File" value="/Users/wangqingwu/Programs/woodpecker/logs/ebnew_space_warn"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="WARN"/>
+            <param name="LevelMin" value="WARN"/>
+        </filter>
+    </appender>
+
+    <appender name="errorLog" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd'.log'"/>
+        <param name="File" value="/Users/wangqingwu/Programs/woodpecker/logs/ebnew_space_error"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] [%d{yyyy-MM-dd HH:mm:ss.sss}]  [ Class = %C | Method = %M | Line = %L ] | %m |%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="ERROR"/>
+            <param name="LevelMin" value="ERROR"/>
+        </filter>
+    </appender>
+    
+    <root>
+        <!--
+        <appender-ref ref="consoleInfoLog" />
+        <appender-ref ref="consoleDebugLog" />
+        -->
+        <appender-ref ref="consoleErrorLog"/>
+        <appender-ref ref="errorLog"/>
+        <!--
+        <appender-ref ref="traceLog" />
+        <appender-ref ref="debugLog" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        -->
+    </root>
+
+    <!-- 记录该包下所有日志 -->
+    <logger name="cn.bidlink">
+        <!--   -->
+        <appender-ref ref="consoleInfoLog"/>
+        <appender-ref ref="consoleWarnLog"/>
+        <appender-ref ref="infoLog"/>
+        <appender-ref ref="warnLog"/>
+        <!--
+        <appender-ref ref="consoleErrorLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+         -->
+    </logger>
+    <!--
+    <logger name="org.hibernate.SQL">
+        <level value="ALL" />
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+    </logger>
+
+    <logger name="org.hibernate">
+        <level value="ALL" />
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="ALL" />
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+    </logger>
+
+    <logger name="org.codehaus.xfire">
+        <level value="ALL" />
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="infoLog" />
+        <appender-ref ref="warnLog" />
+        <appender-ref ref="errorLog" />
+    </logger>
+-->
+
+</log4j:configuration>  

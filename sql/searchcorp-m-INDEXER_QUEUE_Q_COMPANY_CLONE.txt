@@ -1,0 +1,69 @@
+select 
+--id
+rc.id id,
+--poClass
+0 poClass,
+--fullText
+--name
+rc.name name,
+--mainProduct
+ru.main_product mainProduct,
+--state
+cc.state state,
+--workPattern
+rc.workPattern workPattern,
+--processTime
+rc.create_Date processTime,
+--pubDate
+rc.create_Date pubDate,
+--publisher
+ru.login_name publisher,
+--publisherid
+ru.id publisherid,
+--zone CASE WHEN sp.price IS NULL THEN 0 WHEN sp.price='' THEN 0 ELSE 1 END
+case when rc.country='1001' then (case when rc.city is not null then rc.city else rc.area end) else rc.country end zone,
+--country
+rc.country country,
+--zoneName
+rr.NAME zoneName,
+--userType
+rc.type userType,
+--industry
+TRIM(REPLACE(rc.industry,';',' ')) industry,
+--docAbstract
+SUBSTR(rc.company_desc,0,140) docAbstract,
+--matestate
+rwa.status matestate,
+--spacestate
+--noisestate
+--createDate
+--logo
+--authStatus
+case rc.bidauth_status when '0' then '1' when '2' then '2' when '1' then '3' else '' end authStatus,
+--authenNumber
+authen_Number authenNumber,
+--eNumber
+nvl(sc.enterprise_trade_number,0) eNumber,
+--ePrice
+nvl(sc.enterprise_trade_amount,0) ePrice,
+--bNumber
+nvl(sc.bid_trad_number,0) bNumber,
+--bPrice
+nvl(sc.bid_trade_amount,0) bPrice,
+--tradeNumber
+nvl(sc.enterprise_trade_number,0)+nvl(sc.bid_trad_number,0) tradeNumber,
+--tradePrice
+nvl(sc.enterprise_trade_amount,0)+nvl(sc.bid_trade_amount,0) tradePrice,
+--key
+rc.id key
+from t_reg_company rc 
+left join epsiii.corp_companys cc on rc.id=cc.id 
+left join t_reg_user ru on rc.id=ru.company_id and ru.is_subuser=0 
+LEFT JOIN T_REG_WEB_ACTIVE RWA ON RU.ID=RWA.USER_ID
+left join t_statistic_credit sc on rc.id=sc.company_id
+left join CORP_RESOURCE_REGIONS rr on to_number(
+SUBSTR(
+(CASE WHEN RC.COUNTRY='1001' THEN (CASE WHEN RC.CITY IS NOT NULL THEN RC.CITY ELSE RC.AREA END) ELSE RC.COUNTRY END),
+0,
+LENGTH(CASE WHEN RC.COUNTRY='1001' THEN (CASE WHEN RC.CITY IS NOT NULL THEN RC.CITY ELSE RC.AREA END) ELSE RC.COUNTRY END)-2)
+||'00')=rr.id where ru.status=1

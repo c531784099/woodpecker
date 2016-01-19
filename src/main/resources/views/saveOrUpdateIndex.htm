@@ -1,0 +1,223 @@
+<html>
+<head>
+    <title>查看索引调度列表</title>
+    <style>
+        img {
+            border: 0px;
+        }
+    </style>
+</head>
+<body>
+#parse("common.htm")
+
+<h1>
+    #if($ObjectUtils.isNull($index.id)) Add Index #else Update Index [$index.name] #end
+
+    #if($ObjectUtils.notNull($index.id))
+    &nbsp;[<a href="javascript:void(0)"
+              onclick="deleteConfirm('index -> $index.name','$contextPath/indexer/deleteIndex.htm?id=$index.id')">Delete</a>]
+    #end
+</h1>
+	
+<span style="font-size:20">
+	
+<form id="indexSaveOrUpdateForm" method="post" action="$contextPath/indexer/saveOrUpdateIndex.htm">
+    #submittoken
+
+    #if($messages.error.size() > 0)
+    <h4 style="color:red">
+        <ul>
+            #foreach($msg in $messages.error.values())
+            <li>$msg</li>
+            #end
+        </ul>
+    </h4>
+    #end
+
+    <br/>
+    <a href="$contextPath/indexer/findIndexList.htm">
+        Index List
+    </a>
+    <br/>
+
+    Basic:
+</span>
+<table class="thinTable">
+    <tr>
+        <td align="right">Name:</td>
+        <td><input name="name" type="text" value="$!index.name" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">DB Type:</td>
+        <td>
+            <select name="databaseDialectClass">
+                <option value="cn.bidlink.framework.search.engine.OracleDatabaseDialect"
+                #if($index.databaseDialectClass == "cn.bidlink.framework.search.engine.OracleDatabaseDialect") selected
+                #end>cn.bidlink.framework.search.engine.OracleDatabaseDialect</option>
+                <option value="cn.bidlink.framework.search.engine.MysqlDatabaseDialect"
+                #if($index.databaseDialectClass == "cn.bidlink.framework.search.engine.MysqlDatabaseDialect") selected
+                #end>cn.bidlink.framework.search.engine.MysqlDatabaseDialect</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td align="right">DB Driver Class:</td>
+        <td><input name="dbDriverClass" type="text" value="$!index.dbDriverClass" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">DB Url:</td>
+        <td><input name="dbUrl" type="text" value="$!index.dbUrl" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">DB Username:</td>
+        <td><input name="dbUsername" type="text" value="$!index.dbUsername" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">DB Password:</td>
+        <td><input name="dbPassword" type="text" value="$!index.dbPassword" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">DB BatchSize:</td>
+        <td><input name="dbBatchSize" type="text" value="$!index.dbBatchSize" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">Solr Server Url:</td>
+        <td><input name="solrServerUrl" type="text" value="$!index.solrServerUrl" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="right">Solr Server Collection:</td>
+        <td><input name="solrServerCollection" type="text" value="$!index.solrServerCollection" size="100"/></td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">
+            #if($ObjectUtils.notNull($index.id))
+            <input name="id" type="hidden" value="$index.id"/>
+            #end
+            <a href="javascript:void(0)" onclick="jQuery('#indexSaveOrUpdateForm').submit()" class="easyui-linkbutton"
+               iconCls="icon-ok">
+                #if($ObjectUtils.isNull($index.id)) Add #else Update #end
+            </a>
+        </td>
+    </tr>
+</table>
+</form>
+
+#if($ObjectUtils.notNull($index.id))
+
+<br/>
+<span style="font-size:20">
+Field 
+&nbsp;[<a href="$contextPath/saveOrUpdateField.htm?indexId=$index.id">Add</a>]
+&nbsp;[<a href="$contextPath/saveOrUpdateField.htm">Delete All</a>]
+</span>
+<table id="fieldsTable" class="easyui-datagrid" striped="true" singleSelect="true" rownumbers="true" fitColumns="true">
+    <thead>
+    <tr>
+        <th field="name" width="100">Name</th>
+        <th field="columnNames" width="100">ColumnNames</th>
+        <th field="type" width="200">Type</th>
+        <th field="unique" width="100">Unique</th>
+        <th field="convertor" width="200">Convertor</th>
+        <th field="operation" width="100">Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($field in $index.fields)
+    <tr>
+        <td>$!field.name</td>
+        <td>$!field.columnNames</td>
+        <td>$!field.type.name</td>
+        <td>#if($!field.unique) <img style="border:0" src="$contextPath/images/yes.png"/> #end</td>
+        <td>$!field.convertorClass.name</td>
+        <td>
+            [<a href="$contextPath/indexer/findFieldForUpdate.htm?id=$field.id">Update</a>]
+            <a href="javascript:void(0)"
+               onclick="deleteConfirm('field -> $field.name','$contextPath/indexer/deleteField.htm?id=$field.id&indexId=$index.id')">
+                <img src="$contextPath/images/no.png"/>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+    #end
+</table>
+
+<br/>
+<span style="font-size:20">
+Create Task 
+&nbsp;[<a href="$contextPath/saveOrUpdateTask.htm?indexId=$index.id&type=create&indexName=$index.name">Add</a>]
+&nbsp;[<a href="$contextPath/saveOrUpdateCreateTask.htm?indexId=$index.id">Delete All</a>]
+</span>
+<table class="easyui-datagrid" striped="true" singleSelect="true" rownumbers="true" fitColumns="true">
+    <thead>
+    <tr>
+        <th field="name" width="100">Name</th>
+        <th field="original" width="100">Original</th>
+        <th field="completed" width="100">Completed</th>
+        <th field="dividable" width="100">Dividable</th>
+        <th field="operation" width="100">Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($createTask in $index.createTasks)
+    #if($createTask.original)
+    <tr>
+        <td><a target="_blank"
+               href="$contextPath/indexer/findTask.htm?id=$createTask.id&type=create&indexName=$index.name">$!createTask.name</a>
+        </td>
+        <td><img style="border:0"
+                 src="#if($!createTask.original) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/>
+        </td>
+        <td><img style="border:0"
+                 src="#if($!createTask.completed) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/>
+        </td>
+        <td><img style="border:0"
+                 src="#if($!createTask.dividable) $contextPath/images/yes.png #else $contextPath/images/no.png #end"/>
+        </td>
+        <td>
+            [<a target="_blank"
+                href="$contextPath/indexer/findTaskForUpdate.htm?id=$createTask.id&type=create">Update</a>]
+            [<a href="javascript:void(0)"
+                onclick="deleteConfirm('Create Task -> $createTask.name','$contextPath/indexer/deleteTask.htm?id=$createTask.id&indexId=$index.id')">Delete</a>]
+        </td>
+    </tr>
+    #end
+    #end
+    </tbody>
+</table>
+
+<br/>
+<span style="font-size:20">
+Maintain Task 
+&nbsp;[<a href="$contextPath/saveOrUpdateTask.htm?indexId=$index.id&type=maintain&indexName=$index.name">Add</a>]
+&nbsp;[<a href="$contextPath/saveOrUpdateMaintainTask.htm?indexId=$index.id">Delete All</a>]
+</span>
+<table class="easyui-datagrid" striped="true" singleSelect="true" rownumbers="true" fitColumns="true">
+    <thead>
+    <tr>
+        <th field="name" width="100">Name</th>
+        <th field="queueTableName" width="200">Queue Table Name</th>
+        <th field="repeatInterval" width="200">Repeat Interval</th>
+        <th field="operation" width="100">Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    #foreach($maintainTask in $index.maintainTasks)
+    <tr>
+        <td><a target="_blank"
+               href="$contextPath/indexer/findTask.htm?id=$maintainTask.id&type=maintain&indexName=$index.name">$!maintainTask.name</a>
+        </td>
+        <td>$!maintainTask.queueTableName</td>
+        <td>$!maintainTask.repeatInterval</td>
+        <td>
+            [<a target="_blank" href="$contextPath/indexer/findTaskForUpdate.htm?id=$!maintainTask.id&type=maintain">Update</a>]
+            [<a href="javascript:void(0)"
+                onclick="deleteConfirm('Maintain Task -> $maintainTask.name','$contextPath/indexer/deleteTask.htm?id=$!maintainTask.id&indexId=$index.id')">Delete</a>]
+        </td>
+    </tr>
+    #end
+    </tbody>
+</table>
+#end
+
+</body>
+</html>

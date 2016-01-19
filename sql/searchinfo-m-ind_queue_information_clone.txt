@@ -1,0 +1,40 @@
+SELECT
+    --id
+    bn.id,
+    --title see fullText
+    --fullText
+    bn.doc_title,
+    bn.doc_keyword,
+    bn.doc_content,
+    --docSource
+    NVL(bn.doc_source_code,'0') docSource,
+    --docKeywords see fullText
+    --pubDate
+    bn.pubdate,
+    --creatDate
+    bn.create_date,
+    --infoClasscode
+    TRIM(REPLACE(bn.info_class_codes,';',' ')) infoClasscode,
+    --infoClass
+    bn.info_classes,
+    --hits
+    NVL(bn.hits,'0') hits,
+    --zone
+    NVL(TRIM(REPLACE(bn.zone_code,';',' ')),'990002') zone,
+    --zoneName
+    NVL(TRIM(REPLACE(bn.zone,';',' ')),'¹úÄÚ') zoneName,
+    --industry
+    bn.industry,
+    --industryName
+    bn.industry_name,
+    --oriPubWeb
+    bn.ori_pub_web,
+    --oriAuthor
+    bn.ori_author,
+    --fundSourceCodes
+    NULL fundSourceCodes,
+    --type
+    0 type
+FROM biz_news bn
+WHERE 
+    bn.create_date>=TRUNC(TO_DATE('2009-09-09','yyyy-mm-dd'), 'DD')

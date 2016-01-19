@@ -1,0 +1,62 @@
+<link rel="stylesheet" type="text/css" href="$contextPath/css/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="$contextPath/css/themes/icon.css">
+
+<style type="text/css">
+    <!--
+    .thinTable {
+        border-collapse: collapse;
+        border: none;
+    }
+
+    .thinTable th {
+        border: solid 1px #A9A8A8;
+    }
+
+    .thinTable td {
+        border: solid 1px #A9A8A8;
+    }
+
+    -->
+</style>
+
+<script type="text/javascript" src="$contextPath/js/jquery.js"></script>
+<script type="text/javascript" src="$contextPath/js/jquery.easyui.js"></script>
+<script type="text/javascript">
+    function deleteConfirm(name, url) {
+        var confirmDialog = jQuery("#confirmDialog");
+        confirmDialog.find("#deleteMessage").text("确定要删除 : [ " + name + " ] ?");
+        confirmDialog.find("#ok").bind('click', function () {
+            confirmDialog.dialog("close");
+            window.location.href = url;
+        });
+        confirmDialog.find("#cancel").bind('click', function () {
+            confirmDialog.dialog("close");
+        });
+        confirmDialog.dialog("open");
+    }
+
+    function showDetail(title, contentId) {
+        var detailWindow = jQuery("#detailWindow");
+        detailWindow.window({
+            title: title
+        });
+        detailWindow.title = title;
+        var content = jQuery("#" + contentId).text();
+        detailWindow.find("#content").text(content);
+        detailWindow.window("open");
+    }
+</script>
+
+<div id="confirmDialog" closed="true" modal="true" style="text-align:center;width:600px;height:500px"
+     class="easyui-dialog" title="删除确认">
+    <div id="deleteMessage" style="width:100%;text-align:center;margin-top:50px;font-size:20"></div>
+    <div style="width:100%;text-align:center;margin-top:200px">
+        <a id="ok" href="#" class="easyui-linkbutton" iconCls="icon-ok">Yes</a>
+        <a id="cancel" href="#" class="easyui-linkbutton" iconCls="icon-cancel">No</a>
+    </div>
+</div>
+
+<div id="detailWindow" closed="true" closable="true" modal="true" style="text-align:center;width:800px;height:600px"
+     class="easyui-window">
+    <textarea id="content" style="width:100%;height:99%"></textarea>
+</div>

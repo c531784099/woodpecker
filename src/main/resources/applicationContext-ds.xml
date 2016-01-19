@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jee="http://www.springframework.org/schema/jee"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+	
+	<context:property-placeholder location="classpath*:application-ds.properties"/>
+	
+	<bean id="objectInfoFactory" class="cn.bidlink.search.datasource.annotation.info.ObjectInfoFactory" init-method="init">
+		<property name="packageToScan" value="cn.bidlink.framework.search.data"/>
+	</bean>
+	
+	<bean id="creditScoreJmsDataSource" class="cn.bidlink.search.datasource.apps.spring.jms.SpringActivemqDataSource" init-method="init">
+		<property name="brokerUrl" value="${creditScore.mq.brokerUrl}"/>
+		<property name="username" value="${creditScore.mq.username}"/>
+		<property name="password" value="${creditScore.mq.password}"/>
+	</bean>
+	
+	<bean id="creditScoreSqlDataSource" class="cn.bidlink.search.datasource.apps.sql.BonecpDataSource">
+		<property name="driver" value="${oracle.driver}"/>
+		<property name="url" value="${oracle.url}"/>
+		<property name="username" value="${oracle.username}"/>
+		<property name="password" value="${oracle.password}"/>
+	</bean>
+</beans>

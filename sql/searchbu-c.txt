@@ -1,0 +1,56 @@
+select
+    --id
+    b.id,
+    --fulltext   
+    b.title,
+    b.indexWords,
+    b.bidCode,
+    b.content,
+    --pubDate   
+    b.pubDate,
+    --purchaseModel   
+    b.purchaseModel,
+    --bidmodel   
+    b.bidModel,
+    --govBid   
+    case b.govBid when '1' then '1' else '0' end govBid,
+    --normIndustry
+    TRIM(REPLACE(b.industry,';',' ')) industry,
+    --fundSourceCodes
+    b.fundSourceCodes,
+    --infoClassCodes
+    b.infoType,
+    --zone
+    b.zone,
+    --beginDate
+    b.beginDate,
+    --endDate
+    b.endDate,
+    --openState
+    case p.openState when '1' then '1' else nvl(p.openState,'1') end openState,
+    --docSource
+    b.docSource,
+    --title see fullText
+    --creatorId
+    b.creatorId,
+    --fullPlace see fullText
+    --buyerName
+    b.companyName,
+    --orgName
+    b.orgName,
+    --docAbstract see fullText
+    --zonename
+    b.zonename,
+    --responseNum
+    nvl(p.responseNum,'0') responseNum,
+    --company
+    b.companyid companyId,
+    --originprojectid
+    p.originprojectid,
+    --modelflag
+    TRIM(REPLACE(p.modelflag,';',' ')) modelflag,
+    --projectId
+    b.projectId
+from
+    biz_bulletin b left join biz_purchase_project p on b.projectid=p.id
+  where b.pubdate>to_timestamp('2012-01-01', 'yyyy-mm-dd hh24:mi:ss.ff')

@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title>查看索引调度列表</title>
+    #parse("common.htm")
+</head>
+<body>
+<h1>
+    #if($ObjectUtils.notNull($task.id))
+    Update
+    #else
+    Add
+    #end
+
+    #if($StringUtils.hasLength($param.type))
+    $param.type
+    #else
+    $type
+    #end
+
+    task
+
+    #if($ObjectUtils.notNull($task.id))
+    [$task.name]
+    #end
+
+    of index
+    #if($StringUtils.hasLength($param.indexName))
+    [$param.indexName]
+    #else
+    [$index.name]
+    #end
+</h1>
+
+#if($messages.error.size() > 0)
+<h4 style="color:red">
+    <ul>
+        #foreach($msg in $messages.error.values())
+        <li>$msg</li>
+        #end
+    </ul>
+</h4>
+#end
+
+<form method="post" action="$contextPath/indexer/saveOrUpdateTask.htm">
+    #submittoken
+    <table class="thinTable">
+        <tr>
+            <td align="right">Name:</td>
+            <td><input name="name" type="text" value="$!task.name"/></td>
+        </tr>
+        <tr>
+            <td align="right">Content Sql:</td>
+            <td>
+                <textarea name="contentSql" rows="20" cols="100">$!task.contentSql</textarea>
+            </td>
+        </tr>
+        
+        ###create
+        #if($param.type == "create")
+        <tr>
+            <td align="right">Divide Sql:</td>
+            <td>
+                <textarea name="divideSql" rows="20" cols="100">$!task.divideSql</textarea>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Dividable:</td>
+            <td><input name="dividable" type="checkbox" #if($ObjectUtils.notNull($task.id)) #if($task.dividable) checked
+                #end #else checked #end />
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Divide Size:</td>
+            <td><input name="divideSize" type="text" value="$!task.divideSize"/></td>
+        </tr>
+        <tr>
+            <td align="right">Table Name:</td>
+            <td>
+                <input type="text" name="tableName" value="$!task.tableName"/>
+            </td>
+        </tr>
+        #end
+        ###maintain
+        #if($param.type == "maintain")
+        <tr>
+            <td align="right">Queue Table Name:</td>
+            <td><input name="queueTableName" type="text" value="$!task.queueTableName" size="100"/></td>
+        </tr>
+        <tr>
+            <td align="right">Repeat Interval:</td>
+            <td><input name="repeatInterval" type="text" value="$!task.repeatInterval" size="100"/></td>
+        </tr>
+        #end
+        <tr>
+            <td align="center" colspan="2">
+                #if($ObjectUtils.notNull($task.id))
+                <input name="id" type="hidden" value="$task.id"/>
+                #end
+                <input name="type" type="hidden" value="$param.type"/>
+                <input name="indexId" type="hidden"
+                       value="#if($ObjectUtils.notNull($task.indexId)) $task.indexId #else $param.indexId #end"/>
+                <input type="submit" value="#if($ObjectUtils.isNull($task.id)) Add #else Update #end"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

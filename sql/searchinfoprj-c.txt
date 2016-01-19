@@ -1,0 +1,39 @@
+SELECT
+    --id
+    sp.id,
+    --title see fullText
+    --fullText
+    sp.doc_content,
+    sp.doc_title,
+    sp.doc_summary,
+    --docSource
+    NVL(sp.doc_source_code,'0') docSource,
+    --docKeywords
+    sp.doc_keyword,
+    --pubDate
+    sp.pub_date,
+    --creatDate
+    sp.create_date*1000 create_date,
+    --infoClasscode
+    TRIM(REPLACE(sp.info_class_codes,';',' ')) infoClasscode,
+    --infoClass
+    sp.info_classes,
+    --hits
+    NVL(sp.hits,'0') hits,
+    --zone
+    NVL(TRIM(REPLACE(sp.ext_prov_code,';',' ')),'990002') zone,
+    --zoneName
+    NVL(TRIM(REPLACE(sp.ext_prov_name,';',' ')),'¹úÄÚ') zoneName,
+    --industry
+    TRIM(REPLACE(sp.trade_class_codes,';',' ')) trade_class_codes,
+    --industryName
+    sp.trade_classes,
+    --oriPubWeb
+    NULL oriPubWeb,
+    --oriAuthor
+    NULL oriAuthor,
+    --fundSourceCodes
+    sp.ext_fundcode,
+    --type
+    1 type
+FROM biz_proj_info sp
